@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messenger/BloC/Login/loginBloc.dart';
 import 'package:messenger/BloC/MessageList/bloc/message_list_Bloc.dart';
 import 'package:messenger/UI/NewMessage/newMsgScreen.dart';
 import 'package:messenger/Widget/Btn.dart';
@@ -13,12 +16,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   MessageListBloc messageListBloc;
+  LoginBloc loginBloc;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    this.loginBloc = BlocProvider.of<LoginBloc>(context);
     this.messageListBloc = BlocProvider.of<MessageListBloc>(context);
+    messageListBloc.add(MessageListEvantRecive());
   }
 
   @override
@@ -43,9 +49,7 @@ class _MainScreenState extends State<MainScreen>
   Widget buildUiBasedMessageListState(State) {
     return Scaffold(
       appBar: AppBar(
-//        : Icon(Icons.search),
         title: Text("صفحه اصلی ", style: TextStyle(fontSize: 13)),
-        // leading: new Icon(Icons.dehaze),
         actions: <Widget>[
           new Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -61,6 +65,7 @@ class _MainScreenState extends State<MainScreen>
       drawer: Drawer(
         child: new Column(
           children: <Widget>[
+            // ignore: missing_required_param
             UserAccountsDrawerHeader(
               accountName: Text("زهرا موسوی"),
               currentAccountPicture: CircleAvatar(
@@ -82,6 +87,10 @@ class _MainScreenState extends State<MainScreen>
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('خروج'),
+              onTap: () {
+                exit(0);
+                //this.loginBloc.add(new LoginEventLogOut());
+              },
             ),
           ],
         ),
@@ -104,39 +113,6 @@ class _MainScreenState extends State<MainScreen>
           ),
         ),
       ),
-      /* body: new Row(
-        children: <Widget>[
-          FlatButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.text_rotation_angleup,
-              color: new Color(0xff333399),
-              // color: Colors.amber[700],
-            ),
-            label: Text("خوانده",
-                style: TextStyle(fontSize: 13, color: Colors.black)),
-            //  shape: Border.all(color: Colors.grey),
-          ),
-          FlatButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.sort,
-                color: new Color(0xff333399),
-                // color: Colors.amber[700],
-              ),
-              label: Text("مرتب سازی",
-                  style: TextStyle(fontSize: 13, color: Colors.black))),
-          FlatButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
-                color: new Color(0xff333399),
-                // color: Colors.amber[700],
-              ),
-              label: Text("جستجو",
-                  style: TextStyle(fontSize: 13, color: Colors.black))),
-        ],
-      ),*/
     );
   }
 }

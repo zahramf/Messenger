@@ -14,7 +14,7 @@ class ApiProvider {
   final String _baseUrl =
       // MPref.getString("ApiAddress");
       // "https://api.falsepeti.com/api";
-      "https://quote-garden.herokuapp.com";
+      "http://mailservice.markazfeqhi.com/api/";
   LoginBloc loginBloc;
   //=============================================================
 
@@ -23,12 +23,16 @@ class ApiProvider {
   Dio getBaseDio() {
     // print(MPref.getString("ApiAddress") +
     //     "////////////////////////////////////////////");
-    var token = MPref.getString("AccessToken");
-    Dio dio = Dio(BaseOptions(baseUrl: "https://quote-garden.herokuapp.com",
-        // MPref.getString("ApiAddress"),
+    var token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tYWlsc2VydmljZS5tYXJrYXpmZXFoaS5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MjM2NTQzNDcsImV4cCI6MTYyNDUxODM0NywibmJmIjoxNjIzNjU0MzQ3LCJqdGkiOiJjVjhRejdYajlEaElFOUc5Iiwic3ViIjo3MzgsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.2Xdns9K1qoqmXTlLpc_GrZJpvy0uqrCDfdewUCOgQo8";
 
-        // connectTimeout: 5000,
-        headers: {
+    //MPref.getString("AccessToken");
+    Dio dio =
+        Dio(BaseOptions(baseUrl: "http://mailservice.markazfeqhi.com/api/",
+            // MPref.getString("ApiAddress"),
+
+            // connectTimeout: 5000,
+            headers: {
           "Authorization": "Bearer $token",
           // "Content-Type": "application/json",
           "Accept": "application/json",

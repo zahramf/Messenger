@@ -7,4 +7,14 @@ abstract class MessageListState extends Equatable {
   List<Object> get props => [];
 }
 
-class MessageListInitial extends MessageListState {}
+class MessageListStateInitial extends MessageListState {}
+
+class MessageListSendStateInProgress extends MessageListState {}
+
+class MessageListReciveStateInProgress extends MessageListState {}
+
+class MessageListStateErrore extends MessageListState {}
+
+class MessageListSendStateComplete extends MessageListState {}
+
+class MessageListReciveStateComplete extends MessageListState {}

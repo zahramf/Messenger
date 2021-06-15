@@ -34,6 +34,7 @@ class _InputFieldState extends State<InputField> {
       child: TextField(
         //validator: validator,
         obscureText: widget.obscure,
+        controller: widget.textController,
         decoration: InputDecoration(
           icon: Icon(
             widget.icon,

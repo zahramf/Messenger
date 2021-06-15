@@ -10,9 +10,11 @@ class LoginRepository {
   Future<Login> login(String userName, String password) async {
     var response = await apiProvider
         .post('auth/login?username=$userName&password=$password');
-    if (response.statusCode == 200) {
-      return Login();
+    if (response.statusCode == 200 && response != null) {
+      return Login.fromJson(response.data);
     }
-    return Login.fromJson(response.data);
+
+    print('errore');
+    return Login();
   }
 }
