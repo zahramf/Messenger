@@ -1,8 +1,14 @@
+import 'package:flutter/cupertino.dart';
+
+import 'Deputy.dart';
+import 'Part.dart';
+import 'Post.dart';
+
 class InboxModel {
   int mailId;
   String title;
-  int isSeen;
-  String date;
+  bool isSeen;
+  DateTime date;
   Sender sender;
 
   InboxModel({this.mailId, this.title, this.isSeen, this.date, this.sender});
@@ -10,8 +16,10 @@ class InboxModel {
   InboxModel.fromJson(Map<String, dynamic> json) {
     mailId = json['mail_id'];
     title = json['title'];
-    isSeen = json['isSeen'];
-    date = json['date'];
+    isSeen =
+        json["isSeen"] != null ? (json['isSeen'] == 1 ? true : false) : false;
+    // json['isSeen'];
+    date = DateTime.parse(json['date'].toString());
     sender =
         json['sender'] != null ? new Sender.fromJson(json['sender']) : null;
   }
@@ -36,7 +44,7 @@ class Sender {
   int deputyId;
   int partId;
   int postId;
-  Null pathCover;
+  String pathCover;
   Deputy deputy;
   Part part;
   Post post;
@@ -60,7 +68,7 @@ class Sender {
     deputyId = json['deputy_id'];
     partId = json['part_id'];
     postId = json['post_id'];
-    pathCover = json['pathCover'];
+    pathCover = json['pathCover'] != null ? json['pathCover'] : "";
     deputy =
         json['deputy'] != null ? new Deputy.fromJson(json['deputy']) : null;
     part = json['part'] != null ? new Part.fromJson(json['part']) : null;
@@ -85,72 +93,6 @@ class Sender {
     if (this.post != null) {
       data['post'] = this.post.toJson();
     }
-    return data;
-  }
-}
-
-class Deputy {
-  int deputyId;
-  String title;
-
-  Deputy({this.deputyId, this.title});
-
-  Deputy.fromJson(Map<String, dynamic> json) {
-    deputyId = json['deputy_id'];
-    title = json['title'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['deputy_id'] = this.deputyId;
-    data['title'] = this.title;
-    return data;
-  }
-}
-
-class Part {
-  int partId;
-  String title;
-  int deputyId;
-
-  Part({this.partId, this.title, this.deputyId});
-
-  Part.fromJson(Map<String, dynamic> json) {
-    partId = json['part_id'];
-    title = json['title'];
-    deputyId = json['deputy_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['part_id'] = this.partId;
-    data['title'] = this.title;
-    data['deputy_id'] = this.deputyId;
-    return data;
-  }
-}
-
-class Post {
-  int postId;
-  String title;
-  int levelId;
-  int deputyId;
-
-  Post({this.postId, this.title, this.levelId, this.deputyId});
-
-  Post.fromJson(Map<String, dynamic> json) {
-    postId = json['post_id'];
-    title = json['title'];
-    levelId = json['level_id'];
-    deputyId = json['deputy_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['post_id'] = this.postId;
-    data['title'] = this.title;
-    data['level_id'] = this.levelId;
-    data['deputy_id'] = this.deputyId;
     return data;
   }
 }

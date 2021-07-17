@@ -7,6 +7,14 @@ abstract class MessageListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MessageListEvantRecive extends MessageListEvent {}
+class MessageListEvantRecive extends MessageListEvent {
+  final int page;
 
-class MessageListEventaSend extends MessageListEvent {}
+  MessageListEvantRecive({this.page = 1});
+}
+
+class MessageListEventaSend extends MessageListEvent {
+  final int page;
+
+  MessageListEventaSend({this.page = 1});
+}

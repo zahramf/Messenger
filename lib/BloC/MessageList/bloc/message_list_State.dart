@@ -15,6 +15,14 @@ class MessageListReciveStateInProgress extends MessageListState {}
 
 class MessageListStateErrore extends MessageListState {}
 
-class MessageListSendStateComplete extends MessageListState {}
+class MessageListSendStateComplete extends MessageListState {
+  final List<SentModel> message;
 
-class MessageListReciveStateComplete extends MessageListState {}
+  MessageListSendStateComplete(this.message);
+}
+
+class MessageListReciveStateComplete extends MessageListState {
+  final List<InboxModel> message;
+
+  MessageListReciveStateComplete(this.message);
+}

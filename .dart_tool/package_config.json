@@ -434,6 +434,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "shamsi_date",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/shamsi_date-0.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.12+4",
       "packageUri": "lib/",
@@ -590,7 +596,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-05-09T14:40:49.236063Z",
+  "generated": "2021-06-28T15:10:16.245358Z",
   "generator": "pub",
   "generatorVersion": "2.10.4"
 }

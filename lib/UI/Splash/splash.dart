@@ -19,7 +19,8 @@ class SplashScreenState extends State<SplashScreen> {
     if (accessToken != null && accessToken.length > 0) {
       Navigator.of(context).pushReplacementNamed('/main-screen');
     } else {
-      Navigator.of(context).pushReplacementNamed('/login-screen');
+      // Navigator.of(context).pushReplacementNamed('/login-screen');
+      Navigator.of(context).pushReplacementNamed('/main-screen');
     }
   }
 

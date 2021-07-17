@@ -24,7 +24,7 @@ class ApiProvider {
     // print(MPref.getString("ApiAddress") +
     //     "////////////////////////////////////////////");
     var token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tYWlsc2VydmljZS5tYXJrYXpmZXFoaS5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MjM2NTQzNDcsImV4cCI6MTYyNDUxODM0NywibmJmIjoxNjIzNjU0MzQ3LCJqdGkiOiJjVjhRejdYajlEaElFOUc5Iiwic3ViIjo3MzgsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.2Xdns9K1qoqmXTlLpc_GrZJpvy0uqrCDfdewUCOgQo8";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tYWlsc2VydmljZS5tYXJrYXpmZXFoaS5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MjU4OTcwOTEsImV4cCI6MTYyNjc2MTA5MSwibmJmIjoxNjI1ODk3MDkxLCJqdGkiOiJpaFJ6U0ZDRjJjclkxVGd0Iiwic3ViIjo3MzgsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.MC10iPSqvIlNDKDD5G9_v4hWRxiWeIP-H__T6svCxkQ";
 
     //MPref.getString("AccessToken");
     Dio dio =
@@ -34,7 +34,7 @@ class ApiProvider {
             // connectTimeout: 5000,
             headers: {
           "Authorization": "Bearer $token",
-          // "Content-Type": "application/json",
+          "Content-Type": "application/json",
           "Accept": "application/json",
           // "Content-Type": "multipart/form-data"
         }));
