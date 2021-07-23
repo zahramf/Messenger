@@ -5,7 +5,7 @@ import 'Post.dart';
 class SentModel {
   int mailId;
   String title;
-  String date;
+  DateTime date;
   List<Receivers> receivers;
 
   SentModel({this.mailId, this.title, this.date, this.receivers});
@@ -13,7 +13,7 @@ class SentModel {
   SentModel.fromJson(Map<String, dynamic> json) {
     mailId = json['mail_id'];
     title = json['title'];
-    date = json['date'];
+    date = DateTime.parse(json['date'].toString());
     if (json['receivers'] != null) {
       receivers = new List<Receivers>();
       json['receivers'].forEach((v) {
@@ -38,13 +38,13 @@ class Receivers {
   int receiverId;
   int mailId;
   int receiver;
-  Null archive;
-  Null bookmark;
-  int isSeen;
-  Null isReplyed;
-  int isCopy;
-  int isSecretCopy;
-  Null archiveSent;
+  bool archive;
+  bool bookmark;
+  bool isSeen;
+  bool isReplyed;
+  bool isCopy;
+  bool isSecretCopy;
+  bool archiveSent;
   User user;
 
   Receivers(
@@ -64,13 +64,20 @@ class Receivers {
     receiverId = json['receiver_id'];
     mailId = json['mail_id'];
     receiver = json['receiver'];
-    archive = json['archive'];
-    bookmark = json['bookmark'];
-    isSeen = json['isSeen'];
-    isReplyed = json['isReplyed'];
-    isCopy = json['isCopy'];
-    isSecretCopy = json['isSecretCopy'];
-    archiveSent = json['archiveSent'];
+    archive =
+        json['archive'] != null ? (json['archive'] == 1 ? true : false) : false;
+    bookmark = json['bookmark'] != null
+        ? (json['bookmark'] == 1 ? true : false)
+        : false;
+    isSeen = json['isSeen'] == 1 ? true : false;
+    isReplyed = json['isReplyed'] != null
+        ? (json['isReplyed'] == 1 ? true : false)
+        : false;
+    isCopy = json['isCopy'] == 1 ? true : false;
+    isSecretCopy = json['isSecretCopy'] == 1 ? true : false;
+    archiveSent = json['archiveSent'] != null
+        ? (json['archiveSent'] == 1 ? true : false)
+        : false;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 

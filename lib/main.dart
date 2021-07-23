@@ -65,17 +65,6 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        // initialRoute: '/login',
-        // routes: {
-        //   '/login': (context) => new Directionality(
-        //       textDirection: TextDirection.rtl, child: LoginScreen()),
-        //   '/search': (context) => new Directionality(
-        //       textDirection: TextDirection.rtl, child: SearchScreen()),
-        //   '/newMsg': (context) => new Directionality(
-        //       textDirection: TextDirection.rtl, child: NewMsgScreen()),
-        //   '/Main': (context) => new Directionality(
-        //       textDirection: TextDirection.rtl, child: MainScreen()),
-        // },
       ),
     );
   }

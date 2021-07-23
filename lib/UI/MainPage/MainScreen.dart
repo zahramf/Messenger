@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger/BloC/Login/loginBloc.dart';
@@ -8,6 +9,8 @@ import 'package:messenger/Model/InboxModel.dart';
 import 'package:messenger/UI/NewMessage/newMsgScreen.dart';
 import 'package:messenger/Widget/Btn.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:messenger/Widget/CustomeAppBar.dart';
+import 'package:messenger/routes/router.gr.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 //import 'package:shamsi_date/extensions.dart';
 
@@ -21,6 +24,7 @@ class _MainScreenState extends State<MainScreen>
   bool selected = true;
   MessageListBloc messageListBloc;
   LoginBloc loginBloc;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -41,25 +45,6 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BlocBuilder<MessageListBloc, MessageListState>(
-          // ignore: missing_return
-          builder: (context, state) {
-        if (state is MessageListReciveStateComplete) {
-          return buildUiBasedMessageListState(state);
-        } else if (state is MessageListSendStateComplete) {
-          return buildSentMessageList(state, context);
-        } else if (state is MessageListSendStateInProgress ||
-            state is MessageListReciveStateInProgress) {
-          return CircularProgressIndicator();
-        } else {
-          Container();
-        }
-      }),
-    );
-  }
-
-  Widget buildUiBasedMessageListState(State) {
-    return Scaffold(
       appBar: AppBar(
         title: Text("صفحه اصلی ", style: TextStyle(fontSize: 13)),
         actions: <Widget>[
@@ -68,7 +53,8 @@ class _MainScreenState extends State<MainScreen>
             child: new IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                Navigator.pushNamed(context, "/search");
+                ExtendedNavigator.of(context).push(Routes.searchScreen);
+                // Navigator.pushNamed(context, "/search");
               },
             ),
           ),
@@ -107,7 +93,23 @@ class _MainScreenState extends State<MainScreen>
           ],
         ),
       ),
-      body: buildReciveMessageList(State, context),
+      body: BlocBuilder<MessageListBloc, MessageListState>(
+          // ignore: missing_return
+          builder: (context, state) {
+        if (state is MessageListReciveStateComplete) {
+          // return buildReciveMessageList(state, context);
+          return buildUiBasedMessageListState(state);
+        } else if (state is MessageListSendStateComplete) {
+          return buildSentMessageList(state, context);
+        } else if (state is MessageListSendStateInProgress ||
+            state is MessageListReciveStateInProgress) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          Container();
+        }
+      }),
       bottomNavigationBar: new Container(
         color: Colors.white,
         child: new BottomAppBar(
@@ -117,27 +119,36 @@ class _MainScreenState extends State<MainScreen>
               new FlatButton.icon(
                   onPressed: () {
                     changeFlag(true);
-                    buildReciveMessageList(State, context);
+                    //buildReciveMessageList(State, context);
+                    messageListBloc.add(MessageListEvantRecive());
                   },
                   icon: Icon(Icons.move_to_inbox),
-                  label: Text('ارسالی')),
+                  label: Text('دریافتی')),
               new FloatingActionButton(
                   child: Icon(Icons.add_comment_outlined),
                   backgroundColor: new Color(0xff333399),
                   onPressed: () {
-                    Navigator.pushNamed(context, "/newMsg");
+                    ExtendedNavigator.of(context).push(Routes.newMsgScreen);
+                    //Navigator.pushNamed(context, "/newMsg");
                   }),
               new FlatButton.icon(
                   onPressed: () {
                     changeFlag(false);
-                    buildSentMessageList(State, context);
+                    // buildSentMessageList(State, context);
+                    messageListBloc.add(MessageListEventaSend());
                   },
                   icon: Icon(Icons.launch),
-                  label: Text('دریافتی')),
+                  label: Text('ارسالی')),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildUiBasedMessageListState(State) {
+    return Scaffold(
+      body: buildReciveMessageList(State, context),
     );
   }
 
@@ -150,110 +161,133 @@ class _MainScreenState extends State<MainScreen>
                 margin: EdgeInsets.only(right: 8, left: 8, bottom: 1, top: 2),
                 child: new Card(
                     child: new Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 10),
-                  child:
-                      new Stack(alignment: Alignment.bottomCenter, children: <
-                          Widget>[
-                    new Container(
-                        alignment: Alignment.centerRight,
-                        height: 60,
-                        child: new Row(
+                        padding: const EdgeInsets.fromLTRB(5, 2, 5, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            state.message[index].sender != null &&
-                                    state.message[index].sender.pathCover
-                                        .isNotEmpty
-                                ? Image.network(
-                                    state.message[index].sender.pathCover)
-                                : Image.asset(
-                                    'assets/images/default-avatar.png',
-                                    fit: BoxFit.cover,
-                                    height: 40,
-                                    width: 40,
-                                  ),
-                            new Column(
+                            Row(
                               children: <Widget>[
-                                new Text(
-                                  state.message[index].title.isNotEmpty
-                                      ? state.message[index].title
-                                      : "بدون عنوان",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                new Padding(
-                                  padding: const EdgeInsets.only(right: 2),
-                                  child: new Text(
-                                    state.message[index].sender.fullname
+                                state.message[index].sender != null &&
+                                        state.message[index].sender.pathCover
                                             .isNotEmpty
-                                        ? state.message[index].sender.fullname +
-                                            state.message[index].sender.lastname
-                                        : "ناشناس",
-                                    style: TextStyle(fontSize: 11),
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.network(
+                                          state.message[index].sender.pathCover,
+                                          height: 50,
+                                          width: 50,
+                                        ),
+                                      )
+                                    : Image.asset(
+                                        'assets/images/default-avatar.png',
+                                        fit: BoxFit.cover,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      new Text(
+                                        state.message[index].title.isNotEmpty
+                                            ? state.message[index].title
+                                            : "بدون عنوان",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      new Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 2),
+                                        child: new Text(
+                                          state.message[index].sender.fullname
+                                                  .isNotEmpty
+                                              ? state.message[index].sender
+                                                      .fullname +
+                                                  state.message[index].sender
+                                                      .lastname
+                                              : "ناشناس",
+                                          style: TextStyle(fontSize: 11),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            state.message[index].sender != null
+                                                ? "${state.message[index].sender.deputy.title}| "
+                                                : " ",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.blue[900]),
+                                          ),
+                                          Text(
+                                            state.message[index].sender != null
+                                                ? "${state.message[index].sender.part.title}| "
+                                                : " ",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.blue[900]),
+                                          ),
+                                          Text(
+                                            state.message[index].sender != null
+                                                ? "${state.message[index].sender.post.title}"
+                                                : " ",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.blue[900]),
+                                          )
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                    child: Row(
-                                  children: <Widget>[
-                                    new Text(
-                                      state.message[index].sender != null
-                                          ? "${state.message[index].sender.deputy.title}| "
-                                          : " ",
-                                      style: TextStyle(fontSize: 9),
-                                    ),
-                                    new Text(
-                                      state.message[index].sender != null
-                                          ? "${state.message[index].sender.part.title}| "
-                                          : " ",
-                                      style: TextStyle(fontSize: 9),
-                                    ),
-                                    new Text(
-                                      state.message[index].sender != null
-                                          ? "${state.message[index].sender.post.title}"
-                                          : " ",
-                                      style: TextStyle(fontSize: 9),
-                                    )
-                                  ],
-                                ))
                               ],
-                            )
-                          ],
-                        )),
-                    new Container(
-                        alignment: Alignment.centerLeft,
-                        height: 50,
-                        child: new Column(
-                          children: <Widget>[
-                            new Text(
-                              format2(Jalali.fromDateTime(
-                                      state.message[index].date)) +
-                                  "\n" +
-                                  state.message[index].date.hour.toString() +
-                                  ":" +
-                                  state.message[index].date.minute.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 13),
                             ),
-                            state.message[index].isSeen
-                                ? new Icon(
-                                    Icons.mark_email_read,
-                                    color: Colors.green[800],
-                                    size: 14,
+                            Divider(),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 7),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    format1(Jalali.fromDateTime(
+                                            state.message[index].date)) +
+                                        "\n" +
+                                        state.message[index].date.hour
+                                            .toString() +
+                                        ":" +
+                                        state.message[index].date.minute
+                                            .toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 180, bottom: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        state.message[index].isSeen
+                                            ? new Icon(
+                                                Icons.check,
+                                                color: Colors.green[800],
+                                                size: 14,
+                                              )
+                                            : new Icon(
+                                                Icons.check,
+                                                color: Colors.red[600],
+                                                size: 14,
+                                              )
+                                      ],
+                                    ),
                                   )
-                                : new Icon(
-                                    Icons.mail,
-                                    color: Colors.red[600],
-                                    size: 14,
-                                  )
-                            // new Icon(
-                            // state.message[index].isSeen
-                            //   ? Icons.mark_email_read
-                            // : Icons.mail,
-                            //size: 14,
-                            // )
+                                ],
+                              ),
+                            ),
                           ],
-                        )),
-                  ]),
-                ))),
+                        )))),
           );
         });
   }
@@ -264,59 +298,154 @@ class _MainScreenState extends State<MainScreen>
         itemBuilder: (context, index) {
           return new GestureDetector(
             child: new Container(
-              margin: EdgeInsets.only(right: 8, left: 8, bottom: 2, top: 2),
-              child: new Card(
-                child: new Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 7, 5, 10),
-                    child: new Row(
-                      children: <Widget>[
-                        state.message[index].receivers.first.user.pathCover !=
-                                    null &&
-                                state.message[index].receivers.first.user
-                                    .pathCover.isNotEmpty
-                            ? Image.network(state
-                                .message[index].receivers.first.user.pathCover)
-                            : Image.asset(
-                                'assets/images/default-avatar.png',
-                                fit: BoxFit.cover,
-                                height: 40,
-                                width: 40,
-                              ),
-                        new Column(
+                margin: EdgeInsets.only(right: 8, left: 8, bottom: 1, top: 2),
+                child: new Card(
+                    child: new Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 2, 5, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new Text(
-                              state.message[index].title.isNotEmpty
-                                  ? state.message[index].title
-                                  : "بدون عنوان",
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.bold),
-                            ),
-                            new Padding(
-                              padding: const EdgeInsets.only(right: 7),
-                              child: new Text(
+                            Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
                                 state.message[index].receivers.first.user
-                                        .fullname.isNotEmpty
-                                    ? state.message[index].receivers.first.user
-                                            .fullname +
+                                                .pathCover !=
+                                            null &&
                                         state.message[index].receivers.first
-                                            .user.lastname
-                                    : "ناشناس",
-                                style: TextStyle(fontSize: 11),
-                              ),
+                                            .user.pathCover.isNotEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.network(
+                                          state.message[index].receivers.first
+                                              .user.pathCover,
+                                          height: 50,
+                                          width: 50,
+                                        ))
+                                    : Image.asset(
+                                        'assets/images/default-avatar.png',
+                                        fit: BoxFit.cover,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      new Text(
+                                        state.message[index].title.isNotEmpty
+                                            ? state.message[index].title
+                                            : "بدون عنوان",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      new Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 2),
+                                        child: Text(
+                                          state.message[index].receivers.first
+                                                  .user.fullname.isNotEmpty
+                                              ? state.message[index].receivers
+                                                      .first.user.fullname +
+                                                  state.message[index].receivers
+                                                      .first.user.lastname
+                                              : "ناشناس",
+                                          style: TextStyle(fontSize: 11),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 7),
+                                  child: Text(
+                                    format1(Jalali.fromDateTime(
+                                            state.message[index].date)) +
+                                        "\n" +
+                                        state.message[index].date.hour
+                                            .toString() +
+                                        ":" +
+                                        state.message[index].date.minute
+                                            .toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 170, bottom: 10),
+                                  child: Row(
+                                    children: <Widget>[
+                                      state.message[index].receivers.first
+                                              .isSeen
+                                          ? new Icon(
+                                              Icons.check,
+                                              color: Colors.green[800],
+                                              size: 14,
+                                            )
+                                          : new Icon(
+                                              Icons.check,
+                                              color: Colors.red[600],
+                                              size: 14,
+                                            )
+                                    ],
+                                  ),
+                                )
+                                /*  Text(
+                                    format1(Jalali.fromDateTime(
+                                            state.message[index].date)) +
+                                        "\n",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 180, bottom: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          state.message[index].date.hour
+                                                  .toString() +
+                                              ":" +
+                                              state.message[index].date.minute
+                                                  .toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 10),
+                                        ),
+                                        state.message[index].receivers.first
+                                                .isSeen
+                                            ? new Icon(
+                                                Icons.check,
+                                                color: Colors.green[800],
+                                                size: 14,
+                                              )
+                                            : new Icon(
+                                                Icons.check,
+                                                color: Colors.red[600],
+                                                size: 14,
+                                              )
+                                      ],
+                                    ),
+                                  )*/
+                              ],
                             ),
                           ],
-                        )
-                      ],
-                    )),
-              ),
-            ),
+                        )))),
           );
         });
   }
 
-  String format2(Date d) {
+  String format1(Date d) {
     final f = d.formatter;
 
-    return '${f.dd}/${f.mm}/${f.yyyy}';
+    return '${f.wN} ${f.d} ${f.mN} ${f.yyyy}';
   }
 }
