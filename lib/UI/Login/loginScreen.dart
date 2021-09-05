@@ -54,76 +54,83 @@ class _LoginScreenState extends State<LoginScreen>
 
     return Scaffold(
       body: Container(
-        height: height,
-        width: width,
-        //child: SingleChildScrollView(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.only(top: 70, bottom: 30),
-              child: new Container(
-                width: width,
-                height: height * 0.25,
-                child: Image.asset("assets/images/loginIcon.png"),
-              ),
+          height: height,
+          width: width,
+          //child: SingleChildScrollView(
+          child:
+              //new Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              //  children: <Widget>[
+              SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.only(top: 70, bottom: 30),
+                  child: new Container(
+                    width: width,
+                    height: height * 0.25,
+                    child: Image.asset("assets/images/loginIcon.png"),
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: new InputField(
+                    textController: userNameController,
+                    hint: 'نام کاربری خود را وارد کنید',
+                    label: 'نام کاربری',
+                    obscure: false,
+                    icon: Icons.person,
+                    radius: 15,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: new InputField(
+                    textController: passController,
+                    hint: 'رمز عبور خود را وارد کنید',
+                    label: ' رمز عبور',
+                    obscure: false,
+                    icon: Icons.vpn_key,
+                    radius: 15,
+                    // suffixIcon: Icon(Icons.lock),
+                  ),
+                ),
+                // (state is )
+                new Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: new ButtonTheme(
+                      minWidth: width * .85,
+                      height: 55,
+                      child: new RaisedButton(
+                        onPressed: () {
+                          this.loginBloc.add(new LoginEventLogin(
+                              userName: userNameController.text,
+                              pass: passController.text));
+                        },
+                        child: new Text(
+                          'ورود',
+                          style: new TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        color: new Color(0xff333399),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      )),
+                )
+              ],
             ),
-            new Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: new InputField(
-                textController: userNameController,
-                hint: 'نام کاربری خود را وارد کنید',
-                label: 'نام کاربری',
-                obscure: false,
-                icon: Icons.person,
-                radius: 15,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            new Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: new InputField(
-                textController: passController,
-                hint: 'رمز عبور خود را وارد کنید',
-                label: ' رمز عبور',
-                obscure: false,
-                icon: Icons.vpn_key,
-                radius: 15,
-                // suffixIcon: Icon(Icons.lock),
-              ),
-            ),
-            // (state is )
-            new Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: new ButtonTheme(
-                  minWidth: width * .85,
-                  height: 55,
-                  child: new RaisedButton(
-                    onPressed: () {
-                      this.loginBloc.add(new LoginEventLogin(
-                          userName: userNameController.text,
-                          pass: passController.text));
-                    },
-                    child: new Text(
-                      'ورود',
-                      style: new TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    color: new Color(0xff333399),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  )),
-            )
-          ],
-        ),
+          )
+          // ],
+          //),
 
-        //),
-      ),
+          //),
+          ),
     );
   }
 }

@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   auto_route: ^0.6.9
-  
+  flutter_html: ^0.8.2  
   
   flutter_localizations:
     sdk: flutter

@@ -13,4 +13,9 @@ class SearchStateInProgress extends SearchState {}
 
 class SearchStateError extends SearchState {}
 
-class SearchStateCompleted extends SearchState {}
+class SearchStateCompleted extends SearchState {
+  final List<InboxModel> searchMessage;
+  //final List<SentModel> searchMessage2;
+
+  SearchStateCompleted({this.searchMessage});
+}

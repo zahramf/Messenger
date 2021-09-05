@@ -3,7 +3,7 @@ class User {
   String username;
   String fullname;
   String lastname;
-  Null pathCover;
+  String pathCover;
   int deputyId;
   int partId;
   int postId;
@@ -27,9 +27,9 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
     username = json['username'];
-    fullname = json['fullname'];
+    fullname = json['fullname'] != null ? json['fullname'] : "";
     lastname = json['lastname'];
-    pathCover = json['pathCover'];
+    pathCover = json['pathCover'] != null ? json['pathCover'] : null;
     deputyId = json['deputy_id'];
     partId = json['part_id'];
     postId = json['post_id'];
@@ -44,6 +44,7 @@ class User {
     data['user_id'] = this.userId;
     data['username'] = this.username;
     data['fullname'] = this.fullname;
+
     data['lastname'] = this.lastname;
     data['pathCover'] = this.pathCover;
     data['deputy_id'] = this.deputyId;

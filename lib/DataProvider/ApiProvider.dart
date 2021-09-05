@@ -4,10 +4,8 @@ import 'package:messenger/BloC/Login/loginBloc.dart';
 import 'package:messenger/DataProvider/DioConnectRequest.dart';
 
 import 'package:messenger/DataProvider/RetryConnection.dart';
-import 'package:messenger/BloC/Login/loginBloc.dart';
 //import 'package:messenger/BloC/Login/loginEvent.dart';
 //import 'package:messenger/BloC/Login/loginState.dart';
-import '../Mpref.dart';
 
 class ApiProvider {
   //=============================================================
@@ -24,7 +22,7 @@ class ApiProvider {
     // print(MPref.getString("ApiAddress") +
     //     "////////////////////////////////////////////");
     var token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tYWlsc2VydmljZS5tYXJrYXpmZXFoaS5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MjY3NjEzNjAsImV4cCI6MTYyNzYyNTM2MCwibmJmIjoxNjI2NzYxMzYwLCJqdGkiOiJJSDMzb1VXRTBDM3RlUkxhIiwic3ViIjo3MzgsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.CAJBNyrIXMQoI-j8_dm0WZ1wtAztA6Wu_bnoHulVw-Q";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tYWlsc2VydmljZS5tYXJrYXpmZXFoaS5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MzA1ODA4OTEsImV4cCI6MTYzMTQ0NDg5MSwibmJmIjoxNjMwNTgwODkxLCJqdGkiOiI3bTdEbUJDV2lqWGV2TGl4Iiwic3ViIjo3MzgsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.HW-G6Cp991k4AlvSBcf1Ap4omHWXCYwNhq2x4GyfXec";
 
     //MPref.getString("AccessToken");
     Dio dio =
@@ -34,7 +32,6 @@ class ApiProvider {
             // connectTimeout: 5000,
             headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
           "Accept": "application/json",
           // "Content-Type": "multipart/form-data"
         }));

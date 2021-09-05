@@ -20,9 +20,9 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\ZahRa\.g
 MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\5f606c30f064eed94124828de37fadc0\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\96aee308bccd03bc62c306516c23a410\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\15792e6083b2b5b5a7ffa285d47daa24\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-7:12
-INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-7:12
-INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-7:12
+INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-9:12
+INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-9:12
+INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:1:1-9:12
 	package
 		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:2:5-36
 		INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml
@@ -39,6 +39,8 @@ INJECTED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\deb
 		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:1:11-69
 application
 ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:3:4-40:19
+MERGED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:3:4-40:19
+MERGED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:3:4-40:19
 MERGED from [androidx.core:core:1.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:5-89
 MERGED from [androidx.core:core:1.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\96aee308bccd03bc62c306516c23a410\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
@@ -47,8 +49,12 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Za
 		ADDED from [androidx.core:core:1.1.0] C:\Users\ZahRa\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:18-86
 	android:label
 		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:4:9-34
+		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:4:9-34
 	android:icon
 		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:5:9-43
+		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:5:9-43
+	android:usesCleartextTraffic
+		ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\debug\AndroidManifest.xml:7:18-53
 activity#com.example.messenger.MainActivity
 ADDED from C:\Users\ZahRa\AndroidStudioProjects\messenger\android\app\src\main\AndroidManifest.xml:6:9-34:20
 	android:launchMode

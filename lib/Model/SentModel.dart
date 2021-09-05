@@ -1,25 +1,56 @@
+import 'Attache.dart';
 import 'Deputy.dart';
 import 'Part.dart';
 import 'Post.dart';
+import 'Receiver.dart';
+import 'Sender.dart';
 
 class SentModel {
   int mailId;
   String title;
   DateTime date;
+  String text;
+  bool isSeen;
+  Sender sender;
+  //Sender send = new Sender();
   List<Receivers> receivers;
+  List<Attache> attaches;
 
-  SentModel({this.mailId, this.title, this.date, this.receivers});
+  SentModel(
+      {this.mailId,
+      this.title,
+      this.date,
+      this.receivers,
+      this.attaches,
+      this.isSeen,
+      // this.send,
+      this.sender,
+      this.text});
 
   SentModel.fromJson(Map<String, dynamic> json) {
     mailId = json['mail_id'];
     title = json['title'];
+    text = json['text'] != null ? json['text'] : "";
+    isSeen =
+        json["isSeen"] != null ? (json['isSeen'] == 1 ? true : false) : false;
     date = DateTime.parse(json['date'].toString());
     if (json['receivers'] != null) {
+      // ignore: deprecated_member_use
       receivers = new List<Receivers>();
       json['receivers'].forEach((v) {
         receivers.add(new Receivers.fromJson(v));
       });
     }
+    if (json['attaches'] != null) {
+      // ignore: deprecated_member_use
+      attaches = new List<Attache>();
+      json['attaches'].forEach((v) {
+        attaches.add(new Attache.fromJson(v));
+      });
+    }
+
+    sender =
+        json['sender'] != null ? new Sender.fromJson(json['sender']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -27,77 +58,20 @@ class SentModel {
     data['mail_id'] = this.mailId;
     data['title'] = this.title;
     data['date'] = this.date;
+    data['isSeen'] = this.isSeen;
+
     if (this.receivers != null) {
       data['receivers'] = this.receivers.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class Receivers {
-  int receiverId;
-  int mailId;
-  int receiver;
-  bool archive;
-  bool bookmark;
-  bool isSeen;
-  bool isReplyed;
-  bool isCopy;
-  bool isSecretCopy;
-  bool archiveSent;
-  User user;
-
-  Receivers(
-      {this.receiverId,
-      this.mailId,
-      this.receiver,
-      this.archive,
-      this.bookmark,
-      this.isSeen,
-      this.isReplyed,
-      this.isCopy,
-      this.isSecretCopy,
-      this.archiveSent,
-      this.user});
-
-  Receivers.fromJson(Map<String, dynamic> json) {
-    receiverId = json['receiver_id'];
-    mailId = json['mail_id'];
-    receiver = json['receiver'];
-    archive =
-        json['archive'] != null ? (json['archive'] == 1 ? true : false) : false;
-    bookmark = json['bookmark'] != null
-        ? (json['bookmark'] == 1 ? true : false)
-        : false;
-    isSeen = json['isSeen'] == 1 ? true : false;
-    isReplyed = json['isReplyed'] != null
-        ? (json['isReplyed'] == 1 ? true : false)
-        : false;
-    isCopy = json['isCopy'] == 1 ? true : false;
-    isSecretCopy = json['isSecretCopy'] == 1 ? true : false;
-    archiveSent = json['archiveSent'] != null
-        ? (json['archiveSent'] == 1 ? true : false)
-        : false;
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['receiver_id'] = this.receiverId;
-    data['mail_id'] = this.mailId;
-    data['receiver'] = this.receiver;
-    data['archive'] = this.archive;
-    data['bookmark'] = this.bookmark;
-    data['isSeen'] = this.isSeen;
-    data['isReplyed'] = this.isReplyed;
-    data['isCopy'] = this.isCopy;
-    data['isSecretCopy'] = this.isSecretCopy;
-    data['archiveSent'] = this.archiveSent;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
+    if (this.sender != null) {
+      data['sender'] = this.sender.toJson();
     }
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [mailId, title, date, sender];
 }
 
 class User {
@@ -126,7 +100,7 @@ class User {
 
   User.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
-    fullname = json['fullname'];
+    fullname = json['fullname'] != null ? json['fullname'] : "";
     lastname = json['lastname'];
     deputyId = json['deputy_id'];
     partId = json['part_id'];

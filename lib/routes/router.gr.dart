@@ -8,12 +8,14 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:messenger/UI/ShowMessage/ShowSentMsg.dart';
+import 'package:messenger/UI/Splash/splash.dart';
 
 import '../UI/Login/loginScreen.dart';
 import '../UI/MainPage/MainScreen.dart';
 import '../UI/NewMessage/newMsgScreen.dart';
 import '../UI/Search/searchScreen.dart';
-import '../UI/Splash/splash.dart';
+import '../UI/ShowMessage/ShowInboxMsg.dart';
 
 class Routes {
   static const String splashScreen = '/';
@@ -21,12 +23,17 @@ class Routes {
   static const String mainScreen = '/main-screen';
   static const String newMsgScreen = '/new-msg-screen';
   static const String searchScreen = '/search-screen';
+  static const String showInboxMsg = '/show-inbox-msg';
+  static const String showSentMsg = '/show-sent-msg';
+
   static const all = <String>{
     splashScreen,
     loginScreen,
     mainScreen,
     newMsgScreen,
     searchScreen,
+    showInboxMsg,
+    showSentMsg
   };
 }
 
@@ -39,6 +46,8 @@ class Router extends RouterBase {
     RouteDef(Routes.mainScreen, page: MainScreen),
     RouteDef(Routes.newMsgScreen, page: NewMsgScreen),
     RouteDef(Routes.searchScreen, page: SearchScreen),
+    RouteDef(Routes.showInboxMsg, page: showInboxMsg),
+    RouteDef(Routes.showSentMsg, page: showSentMsg),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -79,5 +88,54 @@ class Router extends RouterBase {
         transitionDuration: const Duration(milliseconds: 400),
       );
     },
+    showInboxMsg: (data) {
+      final args = data.getArgs<showInboxMsgArguments>(
+        orElse: () => showInboxMsgArguments(),
+      );
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => showInboxMsg(
+          //  key: args.key,
+          msgId: args.msgId,
+        ),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionDuration: const Duration(milliseconds: 400),
+      );
+    },
+    showSentMsg: (data) {
+      final args = data.getArgs<showSentMsgArguments>(
+        orElse: () => showSentMsgArguments(),
+      );
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) => showSentMsg(
+          //  key: args.key,
+          msgId: args.msgId,
+        ),
+        settings: data,
+        transitionsBuilder: TransitionsBuilders.zoomIn,
+        transitionDuration: const Duration(milliseconds: 400),
+      );
+    },
   };
+}
+
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
+
+/// showInboxMsg arguments holder class
+class showInboxMsgArguments {
+  final Key key;
+  final int msgId;
+  showInboxMsgArguments({this.key, this.msgId});
+
+  // showInboxMsgArguments({this.msgId});
+}
+
+class showSentMsgArguments {
+  final Key key;
+  final int msgId;
+  showSentMsgArguments({this.key, this.msgId});
+
+  // showInboxMsgArguments({this.msgId});
 }

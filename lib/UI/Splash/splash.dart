@@ -17,10 +17,13 @@ class SplashScreenState extends State<SplashScreen> {
   navigationPage() {
     final accessToken = MPref.getString('AccessToken');
     if (accessToken != null && accessToken.length > 0) {
-      Navigator.of(context).pushReplacementNamed('/main-screen');
+      //Navigator.of(context).pushReplacementNamed('/main-screen');
+      Navigator.of(context).pushReplacementNamed('/login-screen');
+
+      // Navigator.of(context).pushReplacementNamed('/showInboxMsg');
     } else {
-      // Navigator.of(context).pushReplacementNamed('/login-screen');
-      Navigator.of(context).pushReplacementNamed('/main-screen');
+      Navigator.of(context).pushReplacementNamed('/login-screen');
+      //Navigator.of(context).pushReplacementNamed('/main-screen');
     }
   }
 
@@ -35,6 +38,7 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
+        key: new GlobalKey(),
         backgroundColor: Colors.white,
         body: new Stack(
           fit: StackFit.expand,

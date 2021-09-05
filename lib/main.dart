@@ -10,11 +10,6 @@ import 'package:messenger/Repository/LoginRepository.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:messenger/Repository/MessageRepository.dart';
 
-import 'package:messenger/UI/Login/loginScreen.dart';
-import 'package:messenger/UI/MainPage/MainScreen.dart';
-import 'package:messenger/UI/NewMessage/newMsgScreen.dart';
-import 'package:messenger/UI/Search/searchScreen.dart';
-import 'package:messenger/routes/router.dart';
 import 'package:messenger/routes/router.gr.dart';
 
 import 'BloC/Login/loginBloc.dart';
@@ -49,6 +44,7 @@ class _MyAppState extends State<MyApp> {
                 MessageListBloc(MessageRepository(apiProvider: ApiProvider()))),
       ],
       child: MaterialApp(
+        // key: new GlobalKey(),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [
           // ... app-specific localization delegate[s] here
@@ -60,8 +56,11 @@ class _MyAppState extends State<MyApp> {
           const Locale('fa'), // farsi
         ],
         title: 'Flutter Demo',
-        // initialRoute: Routes.loginScreen,
-        builder: ExtendedNavigator.builder<Router>(router: Router()),
+        //initialRoute: Routes.loginScreen,
+        // builder: ExtendedNavigator.builder<Router>(router: Router()),
+        builder: ExtendedNavigator(
+          router: Router(),
+        ),
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

@@ -8,9 +8,9 @@ abstract class SearchEvent extends Equatable {
 }
 
 class SearchEventSearch extends SearchEvent {
-  final String subject;
+  final String title;
   final String name;
-  final String word;
+  final String text;
 
-  SearchEventSearch({this.subject, this.name, this.word});
+  SearchEventSearch({this.title, this.name, this.text});
 }

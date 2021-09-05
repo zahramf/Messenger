@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger/BloC/Login/loginBloc.dart';
 import 'package:messenger/BloC/MessageList/bloc/message_list_Bloc.dart';
 import 'package:messenger/Model/InboxModel.dart';
-import 'package:messenger/UI/NewMessage/newMsgScreen.dart';
-import 'package:messenger/Widget/Btn.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:messenger/Widget/CustomeAppBar.dart';
+import 'package:messenger/Model/SentModel.dart';
+import 'package:messenger/UI/ShowMessage/ShowInboxMsg.dart';
+
 import 'package:messenger/routes/router.gr.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 //import 'package:shamsi_date/extensions.dart';
@@ -22,6 +19,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   bool selected = true;
+  bool isLoading = false;
+  int inboxPage = 1;
+  int sendPage = 1;
   MessageListBloc messageListBloc;
   LoginBloc loginBloc;
   ScrollController _scrollController = ScrollController();
@@ -32,7 +32,24 @@ class _MainScreenState extends State<MainScreen>
     super.initState();
     this.loginBloc = BlocProvider.of<LoginBloc>(context);
     this.messageListBloc = BlocProvider.of<MessageListBloc>(context);
-    messageListBloc.add(MessageListEvantRecive());
+
+    messageListBloc.add(MessageListEvantRecive(page: this.inboxPage));
+    messageListBloc.add(MessageListEventaSend(page: this.sendPage));
+
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+
+      if (maxScroll == currentScroll) {
+        if (selected) {
+          this.inboxPage += 1;
+          messageListBloc.add(MessageListEvantRecive(page: this.inboxPage));
+        } else {
+          this.sendPage += 1;
+          messageListBloc.add(MessageListEventaSend(page: this.sendPage));
+        }
+      }
+    });
   }
 
   changeFlag(bool flag) {
@@ -96,19 +113,62 @@ class _MainScreenState extends State<MainScreen>
       body: BlocBuilder<MessageListBloc, MessageListState>(
           // ignore: missing_return
           builder: (context, state) {
-        if (state is MessageListReciveStateComplete) {
+        if (state is MessageListStateInitial) {
+          Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is MessageListReciveStateLoad) {
+          if (state.maxItemNum == true) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Row(
+                children: <Widget>[
+                  Icon(Icons.dangerous),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(child: Text("پیامی برای نمایش وجود ندارد"))
+                ],
+              )));
+            });
+          }
           // return buildReciveMessageList(state, context);
           return buildUiBasedMessageListState(state);
-        } else if (state is MessageListSendStateComplete) {
+        } else if (state is MessageListSendStateLoad) {
           return buildSentMessageList(state, context);
         } else if (state is MessageListSendStateInProgress ||
             state is MessageListReciveStateInProgress) {
           return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+              ],
+            ),
+          );
+        } else if (state is MessageListStateErrore) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Row(
+              children: <Widget>[
+                Icon(Icons.error),
+                SizedBox(
+                  width: 15,
+                ),
+                Expanded(child: Text("خطا در برقراری ارتباط با سرور"))
+              ],
+            )));
+          });
+        } else if (state is MessageListEventShowInboxMessage) {
+          Center(
             child: CircularProgressIndicator(),
           );
-        } else {
-          Container();
         }
+
+        return Container(
+            child: Center(
+          child: CircularProgressIndicator(),
+        ));
       }),
       bottomNavigationBar: new Container(
         color: Colors.white,
@@ -120,7 +180,8 @@ class _MainScreenState extends State<MainScreen>
                   onPressed: () {
                     changeFlag(true);
                     //buildReciveMessageList(State, context);
-                    messageListBloc.add(MessageListEvantRecive());
+                    messageListBloc
+                        .add(MessageListEvantRecive(page: inboxPage));
                   },
                   icon: Icon(Icons.move_to_inbox),
                   label: Text('دریافتی')),
@@ -133,9 +194,10 @@ class _MainScreenState extends State<MainScreen>
                   }),
               new FlatButton.icon(
                   onPressed: () {
+                    // print("press");
                     changeFlag(false);
                     // buildSentMessageList(State, context);
-                    messageListBloc.add(MessageListEventaSend());
+                    messageListBloc.add(MessageListEventaSend(page: sendPage));
                   },
                   icon: Icon(Icons.launch),
                   label: Text('ارسالی')),
@@ -152,11 +214,20 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  Widget buildReciveMessageList(MessageListReciveStateComplete state, context) {
+  Widget buildReciveMessageList(MessageListReciveStateLoad state, context) {
     return ListView.builder(
+        controller: _scrollController,
         itemCount: state.message.length,
         itemBuilder: (context, index) {
+          InboxModel idMsg = state.message[index];
           return new GestureDetector(
+            onTap: () {
+              print("Item Click");
+              print(idMsg.mailId);
+
+              ExtendedNavigator.of(context).push(Routes.showInboxMsg,
+                  arguments: showInboxMsgArguments(msgId: idMsg.mailId));
+            },
             child: new Container(
                 margin: EdgeInsets.only(right: 8, left: 8, bottom: 1, top: 2),
                 child: new Card(
@@ -202,12 +273,15 @@ class _MainScreenState extends State<MainScreen>
                                         padding:
                                             const EdgeInsets.only(right: 2),
                                         child: new Text(
-                                          state.message[index].sender.fullname
-                                                  .isNotEmpty
+                                          state.message[index].sender != null
+                                              //.fullname.isNotEmpty
                                               ? state.message[index].sender
-                                                      .fullname +
+                                                      .fullname
+                                                      .trim() +
+                                                  " " +
                                                   state.message[index].sender
                                                       .lastname
+                                                      .trim()
                                               : "ناشناس",
                                           style: TextStyle(fontSize: 11),
                                         ),
@@ -292,11 +366,19 @@ class _MainScreenState extends State<MainScreen>
         });
   }
 
-  Widget buildSentMessageList(MessageListSendStateComplete state, context) {
+  Widget buildSentMessageList(MessageListSendStateLoad state, context) {
     return ListView.builder(
         itemCount: state.message.length,
         itemBuilder: (context, index) {
+          SentModel idMsg = state.message[index];
           return new GestureDetector(
+            onTap: () {
+              print("Item Click");
+              print(idMsg.mailId);
+
+              ExtendedNavigator.of(context).push(Routes.showSentMsg,
+                  arguments: showSentMsgArguments(msgId: idMsg.mailId));
+            },
             child: new Container(
                 margin: EdgeInsets.only(right: 8, left: 8, bottom: 1, top: 2),
                 child: new Card(
@@ -349,6 +431,7 @@ class _MainScreenState extends State<MainScreen>
                                                   .user.fullname.isNotEmpty
                                               ? state.message[index].receivers
                                                       .first.user.fullname +
+                                                  " " +
                                                   state.message[index].receivers
                                                       .first.user.lastname
                                               : "ناشناس",
@@ -369,7 +452,7 @@ class _MainScreenState extends State<MainScreen>
                                   child: Text(
                                     format1(Jalali.fromDateTime(
                                             state.message[index].date)) +
-                                        "\n" +
+                                        "  " +
                                         state.message[index].date.hour
                                             .toString() +
                                         ":" +
@@ -399,42 +482,6 @@ class _MainScreenState extends State<MainScreen>
                                     ],
                                   ),
                                 )
-                                /*  Text(
-                                    format1(Jalali.fromDateTime(
-                                            state.message[index].date)) +
-                                        "\n",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 180, bottom: 10),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          state.message[index].date.hour
-                                                  .toString() +
-                                              ":" +
-                                              state.message[index].date.minute
-                                                  .toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                        state.message[index].receivers.first
-                                                .isSeen
-                                            ? new Icon(
-                                                Icons.check,
-                                                color: Colors.green[800],
-                                                size: 14,
-                                              )
-                                            : new Icon(
-                                                Icons.check,
-                                                color: Colors.red[600],
-                                                size: 14,
-                                              )
-                                      ],
-                                    ),
-                                  )*/
                               ],
                             ),
                           ],

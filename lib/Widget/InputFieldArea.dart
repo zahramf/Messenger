@@ -22,10 +22,11 @@ class InputField extends StatefulWidget {
 class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    double size = MediaQuery.of(context).size.height;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      height: size * 0.08,
+      margin: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
       padding: EdgeInsets.only(top: 0, right: 7, bottom: 0),
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -35,6 +36,8 @@ class _InputFieldState extends State<InputField> {
         //validator: validator,
         obscureText: widget.obscure,
         controller: widget.textController,
+        keyboardType: TextInputType.text,
+
         decoration: InputDecoration(
           icon: Icon(
             widget.icon,
